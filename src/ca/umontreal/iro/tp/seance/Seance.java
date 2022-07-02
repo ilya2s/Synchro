@@ -10,8 +10,8 @@ import java.util.Objects;
 
 public class Seance {
 
-    Type type;
-    Plage plage;
+    private final Type type;
+    private Plage plage;
 
     public Seance(Type type, LocalDate jour, LocalTime debut, LocalTime fin) {
         this.type = type;
@@ -36,6 +36,6 @@ public class Seance {
 
     @Override
     public String toString() {
-        return 
+        return type + ": " + plage;
     }
 }
