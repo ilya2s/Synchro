@@ -1,4 +1,4 @@
-package ca.umontreal.iro.tp.cours;
+package ca.umontreal.iro.tp.seance;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

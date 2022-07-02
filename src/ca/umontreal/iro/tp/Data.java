@@ -1,7 +1,7 @@
 package ca.umontreal.iro.tp;
 
 import ca.umontreal.iro.tp.cours.Cours;
-import ca.umontreal.iro.tp.cours.PlageHoraire;
+import ca.umontreal.iro.tp.seance.PlageHoraire;
 
 import java.util.ArrayList;
 

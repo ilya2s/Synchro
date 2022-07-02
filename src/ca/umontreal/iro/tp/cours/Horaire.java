@@ -1,6 +1,6 @@
-package ca.umontreal.iro.tp;
+package ca.umontreal.iro.tp.cours;
 
-import ca.umontreal.iro.tp.cours.Seance;
+import ca.umontreal.iro.tp.seance.Seance;
 
 import java.util.ArrayList;
 
