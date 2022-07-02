@@ -5,9 +5,9 @@ import java.time.LocalTime;
 
 public abstract class Plage {
 
-    private final LocalDate jour;
-    private final LocalTime debut;
-    private final LocalTime fin;
+    protected final LocalDate jour;
+    protected final LocalTime debut;
+    protected final LocalTime fin;
 
     public Plage(LocalDate jour, LocalTime debut, LocalTime fin) {
         this.jour = jour;

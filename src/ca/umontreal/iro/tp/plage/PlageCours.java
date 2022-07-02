@@ -2,6 +2,8 @@ package ca.umontreal.iro.tp.plage;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.TextStyle;
+import java.util.Locale;
 
 public class PlageCours extends Plage{
 
@@ -11,6 +13,10 @@ public class PlageCours extends Plage{
 
     @Override
     public String toString() {
-        return "";
+        return jour
+                .getDayOfWeek()
+                .getDisplayName(TextStyle.FULL, Locale.CANADA_FRENCH)
+                .toUpperCase()
+                + " (" + debut + " - " + fin + ")";
     }
 }
