@@ -1,14 +1,14 @@
 package ca.umontreal.iro.tp;
 
 import ca.umontreal.iro.tp.cours.Cours;
-import ca.umontreal.iro.tp.seance.PlageHoraire;
+import ca.umontreal.iro.tp.plage.Plage;
 
 import java.util.ArrayList;
 
 public class Data {
 
     private ArrayList<Cours> cours;
-    private ArrayList<PlageHoraire> plages;
+    private ArrayList<Plage> plages;
     private int nbCours = 0;
 
     public Data() {
@@ -26,7 +26,7 @@ public class Data {
         return cours;
     }
 
-    public ArrayList<PlageHoraire> getPlages() {
+    public ArrayList<Plage> getPlages() {
         return plages;
     }
 
