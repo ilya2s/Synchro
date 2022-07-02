@@ -64,16 +64,53 @@ public class Cours {
         return seances.isEmpty() ? null : seances;
     }
 
-    @Override
-    public String toString() {
+    private String stringifyCours() {
         StringBuilder output = new StringBuilder();
 
-        output
-                .append(matiere.toUpperCase())
-                .append("-")
-                .append(numero);
+        for (Seance seance: seances) {
+            if (!seance.getType().equals(Type.Intra) && !seance.getType().equals(Type.Final)) {
+                output
+                        .append(seance)
+                        .append("; ");
+            }
+        }
+
+        int semi = output.lastIndexOf("; ");
+        output.delete(semi, semi + 2);
+        output.append("]\n");
 
         return output.toString();
     }
 
+    private String stringifyExamens() {
+        StringBuilder output = new StringBuilder();
+
+        for (Seance seance: seances) {
+            if (!seance.getType().equals(Type.Theorie) && !seance.getType().equals(Type.Pratique)) {
+                output
+                        .append(seance)
+                        .append("; ");
+            }
+        }
+
+        int semi = output.lastIndexOf("; ");
+        output.delete(semi, semi + 2);
+        output.append("]\n");
+
+        return output.toString();
+    }
+
+    @Override
+    public String toString() {
+        return matiere.toUpperCase() +
+                "-" +
+                numero +
+                " (" +
+                credits +
+                " crédits):\n" +
+                "Cours -> [" +
+                stringifyCours() +
+                "Examens -> [" +
+                stringifyExamens();
+    }
 }

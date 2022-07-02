@@ -19,7 +19,7 @@ public class Seance {
     }
 
     private void makePlage(LocalDate jour, LocalTime debut, LocalTime fin) {
-        if (Objects.equals(type, Type.Examen)) {
+        if (Objects.equals(type, Type.Intra) || Objects.equals(type, Type.Final)) {
             plage = new PlageExamen(jour, debut, fin);
         } else {
             plage = new PlageCours(jour, debut, fin);

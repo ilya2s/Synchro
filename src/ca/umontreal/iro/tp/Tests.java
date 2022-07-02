@@ -28,7 +28,7 @@ public class Tests {
 
         System.out.println("==============================================================");
 
-        Seance s1 = new Seance(Type.Examen, LocalDate.parse("2022-06-14"), LocalTime.parse("12:00"), LocalTime.parse("14:00"));
+        Seance s1 = new Seance(Type.Intra, LocalDate.parse("2022-06-14"), LocalTime.parse("12:00"), LocalTime.parse("14:00"));
         System.out.println(s1);
         System.out.println("Type: " + s1.getType());
         System.out.println("Plage: " + s1.getPlage());
@@ -50,11 +50,54 @@ public class Tests {
         System.out.println(s4);
         System.out.println("Type: " + s4.getType());
         System.out.println("Plage: " + s4.getPlage());
+        System.out.println("---------------------------------------------");
+
+        Seance s5 = new Seance(Type.Final, LocalDate.parse("2022-07-26"), LocalTime.parse("12:00"), LocalTime.parse("15:00"));
+        System.out.println(s5);
+        System.out.println("Type: " + s5.getType());
+        System.out.println("Plage: " + s5.getPlage());
 
         System.out.println("==============================================================");
 
         Cours c1 = new Cours("IFT", 1025, 3, LocalDate.parse("2022-05-03"), LocalDate.parse("2022-07-26"));
+        c1.ajouterSeance(s1);
+        c1.ajouterSeance(s2);
+        c1.ajouterSeance(s3);
+        c1.ajouterSeance(s4);
+        c1.ajouterSeance(s5);
         System.out.println(c1);
+
+        System.out.println("---------------------------------------------");
+
+        System.out.println("Matière: " + c1.getMatiere());
+        System.out.println("Numéro: " + c1.getNumero());
+        System.out.println("Crédits: " + c1.getCredits());
+        System.out.println("Date de début: " + c1.getDateDebut());
+        System.out.println("Date de fin: " + c1.getDateFin());
+        System.out.println("Séances:");
+        for (Seance s : c1.getSeances()) {
+            System.out.println(s);
+        }
+        System.out.println("Séances Théoriques:");
+        for (Seance s : c1.getSeances(Type.Theorie)) {
+            System.out.println(s);
+        }
+        System.out.println("Séances Pratiques:");
+        for (Seance s : c1.getSeances(Type.Pratique)) {
+            System.out.println(s);
+        }
+        System.out.println("Intras:");
+        for (Seance s : c1.getSeances(Type.Intra)) {
+            System.out.println(s);
+        }
+        System.out.println("Final:");
+        for (Seance s : c1.getSeances(Type.Final)) {
+            System.out.println(s);
+        }
+
+
+
+
 
     }
 }
