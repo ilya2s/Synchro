@@ -56,15 +56,53 @@ public class Tests {
         System.out.println(s5);
         System.out.println("Type: " + s5.getType());
         System.out.println("Plage: " + s5.getPlage());
+        System.out.println("---------------------------------------------");
+
+        Seance s6 = new Seance(Type.Pratique, LocalDate.parse("2022-07-07"), LocalTime.parse("12:00"), LocalTime.parse("13:00"));
+        System.out.println(s6);
+        System.out.println("Type: " + s6.getType());
+        System.out.println("Plage: " + s6.getPlage());
+        System.out.println("---------------------------------------------");
+
+        Seance s7 = new Seance(Type.Pratique, LocalDate.parse("2022-07-07"), LocalTime.parse("11:00"), LocalTime.parse("12:30"));
+        System.out.println(s7);
+        System.out.println("Type: " + s7.getType());
+        System.out.println("Plage: " + s7.getPlage());
+        System.out.println("---------------------------------------------");
+
+        Seance s8 = new Seance(Type.Pratique, LocalDate.parse("2022-07-05"), LocalTime.parse("12:30"), LocalTime.parse("15:00"));
+        System.out.println(s8);
+        System.out.println("Type: " + s8.getType());
+        System.out.println("Plage: " + s8.getPlage());
+        System.out.println("---------------------------------------------");
+
+        Seance s9 = new Seance(Type.Theorie, LocalDate.parse("2022-07-12"), LocalTime.parse("12:30"), LocalTime.parse("13:00"));
+        System.out.println(s9);
+        System.out.println("Type: " + s9.getType());
+        System.out.println("Plage: " + s9.getPlage());
+        System.out.println("---------------------------------------------");
+
+        Seance s10 = new Seance(Type.Intra, LocalDate.parse("2022-07-07"), LocalTime.parse("13:00"), LocalTime.parse("15:00"));
+        System.out.println(s10);
+        System.out.println("Type: " + s10.getType());
+        System.out.println("Plage: " + s10.getPlage());
+        System.out.println("---------------------------------------------");
 
         System.out.println("==============================================================");
 
         Cours c1 = new Cours("IFT", 1025, 3, LocalDate.parse("2022-05-03"), LocalDate.parse("2022-07-26"));
-        c1.ajouterSeance(s1);
-        c1.ajouterSeance(s2);
-        c1.ajouterSeance(s3);
-        c1.ajouterSeance(s4);
-        c1.ajouterSeance(s5);
+        System.out.println("S1 : " + (c1.ajouterSeance(s1) ? "Cours ajouté!" : "Erreur il y a conflit d'horaire"));
+        System.out.println("S2 : " + (c1.ajouterSeance(s2) ? "Cours ajouté!" : "Erreur il y a conflit d'horaire"));
+        System.out.println("S3 : " + (c1.ajouterSeance(s3) ? "Cours ajouté!" : "Erreur il y a conflit d'horaire"));
+        System.out.println("S4 : " + (c1.ajouterSeance(s4) ? "Cours ajouté!" : "Erreur il y a conflit d'horaire"));
+        System.out.println("S5 : " + (c1.ajouterSeance(s5) ? "Cours ajouté!" : "Erreur il y a conflit d'horaire"));
+        System.out.println("S6 : " + (c1.ajouterSeance(s6) ? "Cours ajouté!" : "Erreur il y a conflit d'horaire"));
+        System.out.println("S7 : " + (c1.ajouterSeance(s7) ? "Cours ajouté!" : "Erreur il y a conflit d'horaire"));
+        System.out.println("S8 : " + (c1.ajouterSeance(s8) ? "Cours ajouté!" : "Erreur il y a conflit d'horaire"));
+        System.out.println("S9 : " + (c1.ajouterSeance(s9) ? "Cours ajouté!" : "Erreur il y a conflit d'horaire"));
+        System.out.println("S10 : " + (c1.ajouterSeance(s10) ? "Cours ajouté!" : "Erreur il y a conflit d'horaire"));
+        System.out.println("---------------------------------------------");
+
         System.out.println(c1);
 
         System.out.println("---------------------------------------------");

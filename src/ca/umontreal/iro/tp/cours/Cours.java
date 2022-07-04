@@ -1,5 +1,8 @@
 package ca.umontreal.iro.tp.cours;
 
+import ca.umontreal.iro.tp.plage.Plage;
+import ca.umontreal.iro.tp.plage.PlageCours;
+import ca.umontreal.iro.tp.plage.PlageExamen;
 import ca.umontreal.iro.tp.seance.Seance;
 import ca.umontreal.iro.tp.seance.Type;
 
@@ -10,11 +13,11 @@ import java.util.List;
 
 public class Cours {
 
-    private final String matiere;
-    private final int numero;
-    private final int credits;
-    private final LocalDate dateDebut;
-    private final LocalDate dateFin;
+    private String matiere;
+    private int numero;
+    private int credits;
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
     private final List<Seance> seances;
 
     public Cours(String matiere, int numero, int credits,LocalDate dateDebut, LocalDate dateFin) {
@@ -26,28 +29,60 @@ public class Cours {
         this.seances = new ArrayList<>();
     }
 
-    public void ajouterSeance(Seance seance) {
+    public boolean ajouterSeance(Seance seance) {
+        if (seance.getPlage() instanceof PlageExamen) {     // Si on essaie de rajouter un examen
+            for (Seance s : seances) {
+                if (s.getPlage() instanceof PlageCours) continue;
+                if (Plage.checkConflit(seance.getPlage(), s.getPlage())) return false;
+            }
+        } else {
+            for (Seance s : seances) {
+                if (Plage.checkConflit(seance.getPlage(), s.getPlage())) return false;
+            }
+        }
+
         seances.add(seance);
+        return true;
     }
 
     public String getMatiere() {
         return matiere;
     }
 
+    public void setMatiere(String matiere) {
+        this.matiere = matiere;
+    }
+
     public int getNumero() {
         return numero;
+    }
+
+    public void setNumero(int numero) {
+        this.numero = numero;
     }
 
     public int getCredits() {
         return credits;
     }
 
+    public void setCredits(int credits) {
+        this.credits = credits;
+    }
+
     public LocalDate getDateDebut() {
         return dateDebut;
     }
 
+    public void setDateDebut(LocalDate dateDebut) {
+        this.dateDebut = dateDebut;
+    }
+
     public LocalDate getDateFin() {
         return dateFin;
+    }
+
+    public void setDateFin(LocalDate dateFin) {
+        this.dateFin = dateFin;
     }
 
     public List<Seance> getSeances() {
