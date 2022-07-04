@@ -6,7 +6,9 @@ import ca.umontreal.iro.tp.plage.PlageExamen;
 import ca.umontreal.iro.tp.seance.Seance;
 import ca.umontreal.iro.tp.seance.Type;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,6 +45,22 @@ public class Cours {
 
         seances.add(seance);
         return true;
+    }
+
+    public void supprimerSeance(Type type, DayOfWeek jour, LocalTime debut) {
+        if (type.equals(Type.Final) || type.equals(Type.Intra)) return;
+
+        seances.removeIf(s -> s.getType().equals(type)
+                && s.getPlage().getJour().getDayOfWeek().equals(jour)
+                && s.getPlage().getDebut().equals(debut));
+    }
+
+    public void supprimerExamen(Type type, LocalDate jour, LocalTime debut) {
+        if (type.equals(Type.Theorie) || type.equals(Type.Pratique)) return;
+
+        seances.removeIf(s -> s.getType().equals(type)
+                && s.getPlage().getJour().equals(jour)
+                && s.getPlage().getDebut().equals(debut));
     }
 
     public String getMatiere() {

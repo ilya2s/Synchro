@@ -1,5 +1,7 @@
 package ca.umontreal.iro.tp.plage;
 
+import ca.umontreal.iro.tp.seance.Seance;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 

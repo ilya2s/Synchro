@@ -7,6 +7,7 @@ import ca.umontreal.iro.tp.plage.PlageExamen;
 import ca.umontreal.iro.tp.seance.Seance;
 import ca.umontreal.iro.tp.seance.Type;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -133,8 +134,12 @@ public class Tests {
             System.out.println(s);
         }
 
+        System.out.println("==============================================================");
 
-
+        c1.supprimerExamen(Type.Intra, LocalDate.parse("2022-07-07"), LocalTime.parse("13:00"));
+        System.out.println(c1);
+        c1.supprimerSeance(Type.Pratique, DayOfWeek.THURSDAY, LocalTime.parse("13:00"));
+        System.out.println(c1);
 
 
     }
