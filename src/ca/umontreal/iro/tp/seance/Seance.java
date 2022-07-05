@@ -8,10 +8,10 @@ import java.util.Objects;
 
 public class Seance {
 
-    private Type type;
-    private LocalDate jour;
-    private LocalTime debut;
-    private LocalTime fin;
+    protected Type type;
+    protected LocalDate jour;
+    protected LocalTime debut;
+    protected LocalTime fin;
 
     public Seance(Type type, LocalDate jour, LocalTime debut, LocalTime fin) {
         this.type = type;
@@ -36,12 +36,12 @@ public class Seance {
         return fin;
     }
 
-    public static boolean checkConflit(Seance s1, Seance s2) {
-        if (!s1.jour.equals(s2.jour)) return false;
+    public boolean checkConflit(Seance seance) {
+        if (!this.jour.equals(seance.jour)) return false;
 
-        return (s2.debut.isAfter(s1.debut) && s2.debut.isBefore(s1.fin))
-                || (s1.debut.isAfter(s2.debut) && s1.debut.isBefore(s2.fin))
-                || (s2.debut.equals(s1.debut) && s2.fin.equals(s1.fin));
+        return (seance.debut.isAfter(this.debut) && seance.debut.isBefore(this.fin))
+                || (this.debut.isAfter(seance.debut) && this.debut.isBefore(seance.fin))
+                || (seance.debut.equals(this.debut) && seance.fin.equals(this.fin));
     }
 
     @Override
