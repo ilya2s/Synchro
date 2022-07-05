@@ -35,7 +35,11 @@ public class Seance {
     }
 
     public static boolean checkConflit(Seance s1, Seance s2) {
+        if (!s1.jour.equals(s2.jour)) return false;
 
+        return (s2.debut.isAfter(s1.debut) && s2.debut.isBefore(s1.fin))
+                || (s1.debut.isAfter(s2.debut) && s1.debut.isBefore(s2.fin))
+                || (s2.debut.equals(s1.debut) && s2.fin.equals(s1.fin));
     }
 
     @Override
