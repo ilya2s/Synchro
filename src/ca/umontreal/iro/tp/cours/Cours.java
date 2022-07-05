@@ -83,8 +83,7 @@ public class Cours {
             }
         }
 
-        seances.add(intra);
-        return true;
+        return seances.add(intra);
     }
 
     public boolean supprimerIntra(LocalDate jour, LocalTime debut) {
@@ -97,10 +96,24 @@ public class Cours {
                                  LocalDate autreJour,
                                  LocalTime autreDebut,
                                  LocalTime autreFin) {
-        return
+        return supprimerIntra(jour, debut) && ajouterIntra(autreJour, autreDebut, autreFin);
     }
 
+    public boolean ajouterFinal(LocalTime debut, LocalTime fin) {
+        for (Seance s : seances) {
+            if (s instanceof SeanceExamen && Objects.equals(s.getType(), Type.Final)) return false;
+        }
 
+        return seances.add(new SeanceExamen(Type.Final, dateFin, debut, fin));
+    }
+
+    public boolean supprimerFinal() {
+        return seances.removeIf(s -> s instanceof SeanceExamen && Objects.equals(s.getType(), Type.Final));
+    }
+
+    public boolean modifierFinal(LocalTime debut, LocalTime fin) {
+        return supprimerFinal() && ajouterFinal(debut, fin);
+    }
 
     public String getMatiere() {
         return matiere;
