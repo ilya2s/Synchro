@@ -6,9 +6,14 @@ import ca.umontreal.iro.tp.seance.Type;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Period;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Cours {
 
@@ -27,6 +32,25 @@ public class Cours {
         this.dateFin = dateFin;
         this.seances = new ArrayList<>();
     }
+
+    public void ajouterSeances(Type type, DayOfWeek jour, LocalTime debut, LocalTime fin) {
+
+        LocalDate start = dateDebut.with(TemporalAdjusters.next(jour));
+
+        List<LocalDate> dates = start
+                .datesUntil(dateFin, Period.ofWeeks(1)).toList();
+
+        for (LocalDate date : dates) {
+            seances.add(new Seance(type, date, debut, fin));
+        }
+    }
+
+    public void modifierSeances(Type type, DayOfWeek jour, LocalTime debut, LocalTime fin) {
+        seances.removeIf(seance -> seance.getType().equals(type));
+        ajouterSeances(type, jour, debut, fin);
+    }
+
+
 
     public String getMatiere() {
         return matiere;

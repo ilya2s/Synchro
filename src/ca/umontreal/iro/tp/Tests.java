@@ -1,11 +1,14 @@
 package ca.umontreal.iro.tp;
 
+import ca.umontreal.iro.tp.cours.Cours;
 import ca.umontreal.iro.tp.seance.Seance;
 import ca.umontreal.iro.tp.seance.SeanceExamen;
 import ca.umontreal.iro.tp.seance.Type;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 public class Tests {
 
@@ -26,5 +29,24 @@ public class Tests {
         Seance s5 = new SeanceExamen(Type.Final, LocalDate.parse("2022-07-26"), LocalTime.parse("12:00"), LocalTime.parse("15:00"));
         System.out.println(s5);
 
+        System.out.println("========================================================");
+
+        Cours c1 = new Cours("IFT", 1025, 3, LocalDate.parse("2022-05-03"), LocalDate.parse("2022-07-26"));
+
+        c1.ajouterSeances(Type.Theorie, DayOfWeek.TUESDAY, LocalTime.parse("12:00"), LocalTime.parse("14:00"));
+        List<Seance> seances = c1.getSeances();
+
+        for (Seance s : seances) {
+            System.out.println(s);
+        }
+
+        System.out.println("--------------------------------------------------------");
+
+
+        c1.modifierSeances(Type.Theorie, DayOfWeek.FRIDAY, LocalTime.parse("08:00"), LocalTime.parse("11:00"));
+        seances = c1.getSeances();
+        for (Seance s : seances) {
+            System.out.println(s);
+        }
     }
 }
