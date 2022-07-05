@@ -48,8 +48,8 @@ public class Seance {
         this.fin = fin;
     }
 
-    public boolean checkConflit(Seance seance) {
-        if (!this.jour.equals(seance.jour)) return false;
+    public boolean isConflict(Seance seance) {
+        if (!this.jour.getDayOfWeek().equals(seance.jour.getDayOfWeek())) return false;
 
         return (seance.debut.isAfter(this.debut) && seance.debut.isBefore(this.fin))
                 || (this.debut.isAfter(seance.debut) && this.debut.isBefore(seance.fin))

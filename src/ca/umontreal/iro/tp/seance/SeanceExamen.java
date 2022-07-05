@@ -14,14 +14,14 @@ public class SeanceExamen extends Seance {
     }
 
     @Override
-    public boolean checkConflit(Seance seance) {
+    public boolean isConflict(Seance seance) {
         if (!this.jour.equals(seance.jour)) return false;
 
         return (seance.debut.isAfter(this.debut) && seance.debut.isBefore(this.fin))
                 || (this.debut.isAfter(seance.debut) && this.debut.isBefore(seance.fin))
                 || (seance.debut.equals(this.debut) && seance.fin.equals(this.fin))
-                || (this.fin.until(seance.debut, ChronoUnit.MINUTES) < 30)
-                || (seance.fin.until(this.debut, ChronoUnit.MINUTES) < 30);
+                || (Math.abs(this.fin.until(seance.debut, ChronoUnit.MINUTES)) < 30)
+                || (Math.abs(seance.fin.until(this.debut, ChronoUnit.MINUTES)) < 30);
     }
 
     @Override
