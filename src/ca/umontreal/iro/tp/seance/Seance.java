@@ -2,6 +2,8 @@ package ca.umontreal.iro.tp.seance;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.TextStyle;
+import java.util.Locale;
 import java.util.Objects;
 
 public class Seance {
@@ -44,6 +46,11 @@ public class Seance {
 
     @Override
     public String toString() {
-        return type + ": " + plage;
+
+        return type + ": " + jour
+                .getDayOfWeek()
+                .getDisplayName(TextStyle.FULL, Locale.CANADA_FRENCH)
+                .toUpperCase()
+                + " (" + debut + " - " + fin + ")";
     }
 }

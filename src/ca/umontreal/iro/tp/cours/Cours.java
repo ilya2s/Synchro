@@ -1,8 +1,5 @@
 package ca.umontreal.iro.tp.cours;
 
-import ca.umontreal.iro.tp.plage.Plage;
-import ca.umontreal.iro.tp.plage.PlageCours;
-import ca.umontreal.iro.tp.plage.PlageExamen;
 import ca.umontreal.iro.tp.seance.Seance;
 import ca.umontreal.iro.tp.seance.Type;
 
@@ -29,38 +26,6 @@ public class Cours {
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         this.seances = new ArrayList<>();
-    }
-
-    public boolean ajouterSeance(Seance seance) {
-        if (seance.getPlage() instanceof PlageExamen) {     // Si on essaie de rajouter un examen
-            for (Seance s : seances) {
-                if (s.getPlage() instanceof PlageCours) continue;
-                if (Plage.checkConflit(seance.getPlage(), s.getPlage())) return false;
-            }
-        } else {
-            for (Seance s : seances) {
-                if (Plage.checkConflit(seance.getPlage(), s.getPlage())) return false;
-            }
-        }
-
-        seances.add(seance);
-        return true;
-    }
-
-    public void supprimerSeance(Type type, DayOfWeek jour, LocalTime debut) {
-        if (type.equals(Type.Final) || type.equals(Type.Intra)) return;
-
-        seances.removeIf(s -> s.getType().equals(type)
-                && s.getPlage().getJour().getDayOfWeek().equals(jour)
-                && s.getPlage().getDebut().equals(debut));
-    }
-
-    public void supprimerExamen(Type type, LocalDate jour, LocalTime debut) {
-        if (type.equals(Type.Theorie) || type.equals(Type.Pratique)) return;
-
-        seances.removeIf(s -> s.getType().equals(type)
-                && s.getPlage().getJour().equals(jour)
-                && s.getPlage().getDebut().equals(debut));
     }
 
     public String getMatiere() {
