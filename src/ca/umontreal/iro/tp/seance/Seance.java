@@ -1,37 +1,41 @@
 package ca.umontreal.iro.tp.seance;
 
-import ca.umontreal.iro.tp.plage.Plage;
-import ca.umontreal.iro.tp.plage.PlageCours;
-import ca.umontreal.iro.tp.plage.PlageExamen;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
 public class Seance {
 
-    private final Type type;
-    private Plage plage;
+    private Type type;
+    private LocalDate jour;
+    private LocalTime debut;
+    private LocalTime fin;
 
     public Seance(Type type, LocalDate jour, LocalTime debut, LocalTime fin) {
         this.type = type;
-        makePlage(jour, debut, fin);
-    }
-
-    private void makePlage(LocalDate jour, LocalTime debut, LocalTime fin) {
-        if (Objects.equals(type, Type.Intra) || Objects.equals(type, Type.Final)) {
-            plage = new PlageExamen(jour, debut, fin);
-        } else {
-            plage = new PlageCours(jour, debut, fin);
-        }
+        this.jour = jour;
+        this.debut = debut;
+        this.fin = fin;
     }
 
     public Type getType() {
         return type;
     }
 
-    public Plage getPlage() {
-        return plage;
+    public LocalDate getJour() {
+        return jour;
+    }
+
+    public LocalTime getDebut() {
+        return debut;
+    }
+
+    public LocalTime getFin() {
+        return fin;
+    }
+
+    public static boolean checkConflit(Seance s1, Seance s2) {
+
     }
 
     @Override
