@@ -23,9 +23,13 @@ public class Cours {
     private LocalDate dateFin;
     private final List<Seance> seances;
 
-    public Cours(String matiere, int numero, int credits,LocalDate dateDebut, LocalDate dateFin) {
+    public Cours(String matiere, int numero, int credits, LocalDate dateDebut, LocalDate dateFin) throws Exception {
         this.matiere = matiere;
+
+        if (numero / 1000 == 0) throw new NumberFormatException();
         this.numero = numero;
+
+
         this. credits = credits;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
@@ -212,7 +216,7 @@ public class Cours {
 
         int semi = output.lastIndexOf("; ");
         if (semi != -1) output.delete(semi, semi + 2);
-        output.append("]\n");
+        output.append("]");
 
         return output.toString();
     }
