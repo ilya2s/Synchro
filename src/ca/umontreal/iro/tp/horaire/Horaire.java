@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Horaire {
-    private int creditsMax;
+    private final int creditsMax;
     private int credits;
     private final List<Cours> coursDisponibles;
     private final List<Cours> coursInscrits;
@@ -173,6 +173,7 @@ public class Horaire {
                     } catch (Exception e) {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
+                    System.out.println("----------------------------------------------------------");
                     break;
 
                 case 2:
@@ -214,6 +215,7 @@ public class Horaire {
                     } catch (Exception e) {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
+                    System.out.println("----------------------------------------------------------");
                     break;
 
                 case 3:
@@ -280,6 +282,7 @@ public class Horaire {
                     } catch (Exception e) {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
+                    System.out.println("----------------------------------------------------------");
                     break;
 
                 case 4:
@@ -318,6 +321,7 @@ public class Horaire {
                     } catch (Exception e) {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
+                    System.out.println("----------------------------------------------------------");
                     break;
 
                 case 5:
@@ -343,6 +347,7 @@ public class Horaire {
                     } catch (Exception e) {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
+                    System.out.println("----------------------------------------------------------");
                     break;
 
                 case 6:
@@ -379,6 +384,7 @@ public class Horaire {
                     } catch (Exception e) {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
+                    System.out.println("----------------------------------------------------------");
                     break;
 
                 case 7:
@@ -406,6 +412,7 @@ public class Horaire {
                     } catch (Exception e) {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
+                    System.out.println("----------------------------------------------------------");
                     break;
             }
         }
