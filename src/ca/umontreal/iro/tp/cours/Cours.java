@@ -201,7 +201,8 @@ public class Cours {
 
     @Override
     public String toString() {
-        return matiere.toUpperCase() +
+        return "----------------------------------------------------------\n" +
+                matiere.toUpperCase() +
                 "-" +
                 numero +
                 " (" +
