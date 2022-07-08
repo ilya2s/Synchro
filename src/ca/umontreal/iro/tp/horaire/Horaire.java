@@ -40,13 +40,13 @@ public class Horaire {
     public boolean creerCours() {
         Scanner scanner = new Scanner(System.in);
 
-        Cours cours = null;
+        Cours cours;
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");
 
         try {
             System.out.print("MATIERE : ");
-            String matiere = scanner.nextLine();
+            String matiere = scanner.nextLine().toUpperCase();
             if (isNumeric(matiere)) throw new Exception("La matiere ne peut pas etre un numero!");
 
             System.out.print("NUMERO : ");
@@ -126,7 +126,7 @@ public class Horaire {
             }
 
             switch (choix) {
-                case 1:
+                case 1 -> {
                     try {
                         System.out.print("(T)héorie ou (P)ratique ?");
                         String type = scanner.nextLine();
@@ -175,9 +175,8 @@ public class Horaire {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
                     System.out.println("----------------------------------------------------------");
-                    break;
-
-                case 2:
+                }
+                case 2 -> {
                     try {
                         System.out.print("(T)héorie ou (P)ratique ?");
                         String type = scanner.nextLine();
@@ -217,9 +216,8 @@ public class Horaire {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
                     System.out.println("----------------------------------------------------------");
-                    break;
-
-                case 3:
+                }
+                case 3 -> {
                     try {
                         System.out.print("(T)héorie ou (P)ratique ?");
                         String type = scanner.nextLine();
@@ -284,9 +282,8 @@ public class Horaire {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
                     System.out.println("----------------------------------------------------------");
-                    break;
-
-                case 4:
+                }
+                case 4 -> {
                     try {
                         System.out.print("Date de l'examen intra (AAAA-MM-JJ) : ");
                         LocalDate dateIntra = LocalDate.parse(scanner.nextLine(), df);
@@ -323,9 +320,8 @@ public class Horaire {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
                     System.out.println("----------------------------------------------------------");
-                    break;
-
-                case 5:
+                }
+                case 5 -> {
                     try {
                         System.out.print("Date de l'examen intra à supprimer : ");
                         LocalDate dateIntra = LocalDate.parse(scanner.nextLine(), df);
@@ -349,9 +345,8 @@ public class Horaire {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
                     System.out.println("----------------------------------------------------------");
-                    break;
-
-                case 6:
+                }
+                case 6 -> {
                     try {
                         System.out.print("Date de l'examen intra à modifier : ");
                         LocalDate dateIntra = LocalDate.parse(scanner.nextLine(), df);
@@ -386,9 +381,8 @@ public class Horaire {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
                     System.out.println("----------------------------------------------------------");
-                    break;
-
-                case 7:
+                }
+                case 7 -> {
                     try {
                         System.out.print("Nouvelle heure de début de l'examen final : ");
                         LocalTime autreDebut = LocalTime.parse(scanner.nextLine(), tf);
@@ -414,7 +408,7 @@ public class Horaire {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
                     System.out.println("----------------------------------------------------------");
-                    break;
+                }
             }
         }
 

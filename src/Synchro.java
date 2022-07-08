@@ -8,7 +8,6 @@ public class Synchro {
 
         Scanner scanner = new Scanner(System.in);
 
-
         Horaire e22 = new Horaire(18);
         System.out.println(e22);
 
