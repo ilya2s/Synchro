@@ -133,13 +133,14 @@ public class Tests {
         System.out.println(e22);
 
 
-        boolean created = false;
-        while (!created) {
-            created = e22.creerCours();
-            System.out.println("CREER COURS : " + created);
+        while (true) {
+            boolean created = false;
+            while (!created) {
+                created = e22.creerCours();
+                System.out.println("CREER COURS : " + created);
+            }
+            System.out.println(e22);
         }
-
-        System.out.println(e22);
 
 
     }

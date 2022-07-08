@@ -16,11 +16,11 @@ import java.util.Objects;
 
 public class Cours {
 
-    private String matiere;
-    private int numero;
-    private int credits;
-    private LocalDate dateDebut;
-    private LocalDate dateFin;
+    private final String matiere;
+    private final int numero;
+    private final int credits;
+    private final LocalDate dateDebut;
+    private final LocalDate dateFin;
     private final List<Seance> seances;
 
     public Cours(String matiere, int numero, int credits, LocalDate dateDebut, LocalDate dateFin) {
@@ -87,7 +87,8 @@ public class Cours {
     }
 
     public boolean supprimerIntra(LocalDate jour, LocalTime debut) {
-        return seances.removeIf(s -> Objects.equals(s.getJour(), jour)     // Si le meme jour
+        return seances.removeIf(s -> Objects.equals(s.getType(), Type.Intra)
+                && Objects.equals(s.getJour(), jour)     // Si le meme jour
                 && Objects.equals(s.getDebut(), debut));    // si meme heure de debut
     }
 
@@ -107,7 +108,7 @@ public class Cours {
         return seances.add(new SeanceExamen(Type.Final, dateFin, debut, fin));
     }
 
-    public boolean supprimerFinal() {
+    private boolean supprimerFinal() {
         return seances.removeIf(s -> s instanceof SeanceExamen && Objects.equals(s.getType(), Type.Final));
     }
 
@@ -119,40 +120,20 @@ public class Cours {
         return matiere;
     }
 
-    public void setMatiere(String matiere) {
-        this.matiere = matiere;
-    }
-
     public int getNumero() {
         return numero;
-    }
-
-    public void setNumero(int numero) {
-        this.numero = numero;
     }
 
     public int getCredits() {
         return credits;
     }
 
-    public void setCredits(int credits) {
-        this.credits = credits;
-    }
-
     public LocalDate getDateDebut() {
         return dateDebut;
     }
 
-    public void setDateDebut(LocalDate dateDebut) {
-        this.dateDebut = dateDebut;
-    }
-
     public LocalDate getDateFin() {
         return dateFin;
-    }
-
-    public void setDateFin(LocalDate dateFin) {
-        this.dateFin = dateFin;
     }
 
     public List<Seance> getSeances() {
@@ -220,8 +201,7 @@ public class Cours {
 
     @Override
     public String toString() {
-        return "----------------------------------------------------------\n" +
-                matiere.toUpperCase() +
+        return matiere.toUpperCase() +
                 "-" +
                 numero +
                 " (" +
@@ -231,6 +211,6 @@ public class Cours {
                 stringifyCours() +
                 "Examens ->" +
                 stringifyExamens() +
-                "\n----------------------------------------------------------";
+                "\n----------------------------------------------------------\n";
     }
 }

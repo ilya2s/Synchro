@@ -39,10 +39,9 @@ public class Horaire {
     public boolean creerCours() {
         Scanner scanner = new Scanner(System.in);
 
-        Cours cours;
-        boolean examenFinal = true;
-        boolean ajouterSeance = true;
-        boolean supprimerSeance = true;
+        Cours cours = null;
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");
 
         try {
             System.out.print("MATIERE : ");
@@ -52,11 +51,16 @@ public class Horaire {
             System.out.print("NUMERO : ");
             int numero = Integer.parseInt(scanner.nextLine());
 
+            for (Cours c : coursDisponibles) {
+                if (c.getMatiere().equals(matiere) && c.getNumero() == numero) {
+                    throw new Exception("Ce cours existe deja!");
+                }
+            }
+
             System.out.print("CREDITS : ");
             int credits = Integer.parseInt(scanner.nextLine());
 
             System.out.print("DATE DE DEBUT (AAAA-MM-JJ) : ");
-            DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate dateDebut = LocalDate.parse(scanner.nextLine(), df);
 
             System.out.print("DATE DE FIN (AAA-MM-JJ) : ");
@@ -69,7 +73,6 @@ public class Horaire {
             cours = new Cours(matiere, numero, credits, dateDebut, dateFin);
 
             System.out.print("HEURE DEBUT DE L'EXAMEN FINAL : ");
-            DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");
             LocalTime debut = LocalTime.parse(scanner.nextLine(), tf);
 
             System.out.print("HEURE FIN DE L'EXAMEN FINAL : ");
@@ -109,11 +112,12 @@ public class Horaire {
                 System.out.println("(4) Ajouter examen intra");
                 System.out.println("(5) Supprimer examen intra");
                 System.out.println("(6) Modifer examen intra");
+                System.out.println("(7) Modifer examen final");
                 System.out.println("(0) Sauvegarder cours");
 
                 choix = Integer.parseInt(scanner.nextLine());
 
-                if (choix < 0 || choix > 6) {
+                if (choix < 0 || choix > 7) {
                     throw new Exception();
                 }
             } catch (Exception e) {
@@ -143,7 +147,6 @@ public class Horaire {
                         DayOfWeek jourSeance = DayOfWeek.of(jour);
 
                         System.out.print("Heure de début de la seance: ");
-                        DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");
                         LocalTime debut = LocalTime.parse(scanner.nextLine(), tf);
 
                         System.out.print("Heure de fin de la seance: ");
@@ -194,7 +197,6 @@ public class Horaire {
                         DayOfWeek jourSeance = DayOfWeek.of(jour);
 
                         System.out.print("Heure de début de la seance: ");
-                        DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");
                         LocalTime debut = LocalTime.parse(scanner.nextLine(), tf);
 
                         if(cours.supprimerSeances(typeSeance, jourSeance, debut)) {
@@ -236,7 +238,6 @@ public class Horaire {
                         DayOfWeek jourSeance = DayOfWeek.of(jour);
 
                         System.out.print("Heure de début de la seance: ");
-                        DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");
                         LocalTime debut = LocalTime.parse(scanner.nextLine(), tf);
 
                         System.out.println("Veuillez choisir un nouveau jour de la semaine :");
@@ -282,7 +283,130 @@ public class Horaire {
                     break;
 
                 case 4:
+                    try {
+                        System.out.print("Date de l'examen intra (AAAA-MM-JJ) : ");
+                        LocalDate dateIntra = LocalDate.parse(scanner.nextLine(), df);
 
+                        if (dateIntra.isAfter(cours.getDateFin())) {
+                            throw new DateTimeException("La date de l'intra ne peu pas etre apres la date de fin!");
+                        }
+
+                        System.out.print("Heure de début de l'examen intra : ");
+                        LocalTime debut = LocalTime.parse(scanner.nextLine(), tf);
+
+                        System.out.print("Heure de fin de l'examen intra : ");
+                        LocalTime fin = LocalTime.parse(scanner.nextLine(), tf);
+
+                        if (fin.isBefore(debut)) {
+                            throw new DateTimeException("L'heure de fin doit etre apres l'heure de debut!");
+                        }
+
+                        if(cours.ajouterIntra(dateIntra, debut, fin)) {
+                            System.out.println("Intra ajouté avec succes.");
+                        } else {
+                            System.out.println("Echec dans l'ajout de l'examen Intra.");
+                        }
+
+                        System.out.println(cours);
+
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Format de date ou heure invalid! Veuillez recommencer.");
+                    } catch (DateTimeException e) {
+                        System.out.println(e.getMessage() + " Veuillez recommnecer.");
+                    } catch (InputMismatchException e) {
+                        System.out.println(e.getMessage() + " Veuillez recommencer.");
+                    } catch (Exception e) {
+                        System.out.println("Choix invalid! Veuillez recommencer.");
+                    }
+                    break;
+
+                case 5:
+                    try {
+                        System.out.print("Date de l'examen intra à supprimer : ");
+                        LocalDate dateIntra = LocalDate.parse(scanner.nextLine(), df);
+
+                        System.out.print("Heure de début de l'examen intra a supprimer : ");
+                        LocalTime debut = LocalTime.parse(scanner.nextLine(), tf);
+
+                        if(cours.supprimerIntra(dateIntra, debut)) {
+                            System.out.println("Intra supprimee avec succes.");
+                        } else {
+                            System.out.println("Echec dans la suppression de l'examen intra.");
+                        }
+
+                        System.out.println(cours);
+
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Format de date ou heure invalid! Veuillez recommencer.");
+                    } catch (InputMismatchException e) {
+                        System.out.println(e.getMessage() + " Veuillez recommencer.");
+                    } catch (Exception e) {
+                        System.out.println("Choix invalid! Veuillez recommencer.");
+                    }
+                    break;
+
+                case 6:
+                    try {
+                        System.out.print("Date de l'examen intra à modifier : ");
+                        LocalDate dateIntra = LocalDate.parse(scanner.nextLine(), df);
+
+                        System.out.print("Heure de début de l'examen intra a modifier : ");
+                        LocalTime debut = LocalTime.parse(scanner.nextLine(), tf);
+
+                        System.out.print("Nouvelle date de l'examen intra : ");
+                        LocalDate autreDate = LocalDate.parse(scanner.nextLine(), df);
+
+                        System.out.print("Nouvelle heure de début de l'examen intra : ");
+                        LocalTime autreDebut = LocalTime.parse(scanner.nextLine(), tf);
+
+                        System.out.print("Nouvelle heure de fin de l'examen intra : ");
+                        LocalTime autreFin = LocalTime.parse(scanner.nextLine(), tf);
+
+                        if (cours.modifierIntra(dateIntra, debut, autreDate, autreDebut, autreFin)) {
+                            System.out.println("Intra modifiee avec succes.");
+                        } else {
+                            System.out.println("Echec dans la modification de l'examen intra.");
+                        }
+
+                        System.out.println(cours);
+
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Format de date ou heure invalid! Veuillez recommencer.");
+                    } catch (DateTimeException e) {
+                        System.out.println(e.getMessage() + " Veuillez recommnecer.");
+                    } catch (InputMismatchException e) {
+                        System.out.println(e.getMessage() + " Veuillez recommencer.");
+                    } catch (Exception e) {
+                        System.out.println("Choix invalid! Veuillez recommencer.");
+                    }
+                    break;
+
+                case 7:
+                    try {
+                        System.out.print("Nouvelle heure de début de l'examen final : ");
+                        LocalTime autreDebut = LocalTime.parse(scanner.nextLine(), tf);
+
+                        System.out.print("Nouvelle heure de fin de l'examen final : ");
+                        LocalTime autreFin = LocalTime.parse(scanner.nextLine(), tf);
+
+                        if (cours.modifierFinal(autreDebut, autreFin)) {
+                            System.out.println("Final modifiee avec succes.");
+                        } else {
+                            System.out.println("Echec dans la modification de l'examen final.");
+                        }
+
+                        System.out.println(cours);
+
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Format de date ou heure invalid! Veuillez recommencer.");
+                    } catch (DateTimeException e) {
+                        System.out.println(e.getMessage() + " Veuillez recommnecer.");
+                    } catch (InputMismatchException e) {
+                        System.out.println(e.getMessage() + " Veuillez recommencer.");
+                    } catch (Exception e) {
+                        System.out.println("Choix invalid! Veuillez recommencer.");
+                    }
+                    break;
             }
         }
 
@@ -311,12 +435,13 @@ public class Horaire {
 
     @Override
     public String toString() {
-        return "===================================\n" +
-                " (" +
+        return "========================================\n" +
                 credits +
-                " credits inscrits)\n" +
-                "===================================\n" +
+                " credits inscrits (" +
+                (creditsMax - credits) + " credits restants)\n" +
+                "========================================\n" +
                 "Cours disponibles :\n" +
+                "----------------------------------------------------------\n" +
                 stringifyCoursDisponibles();
 
     }
