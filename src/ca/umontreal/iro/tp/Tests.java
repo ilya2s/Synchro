@@ -1,15 +1,6 @@
 package ca.umontreal.iro.tp;
 
-import ca.umontreal.iro.tp.cours.Cours;
 import ca.umontreal.iro.tp.horaire.Horaire;
-import ca.umontreal.iro.tp.horaire.Session;
-import ca.umontreal.iro.tp.seance.Seance;
-import ca.umontreal.iro.tp.seance.SeanceExamen;
-import ca.umontreal.iro.tp.seance.Type;
-
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class Tests {
 
@@ -137,11 +128,18 @@ public class Tests {
         System.out.println("========================================================");
         */
 
-        Horaire e22 = new Horaire(Session.Ete, 2022, 18);
+
+        Horaire e22 = new Horaire(18);
         System.out.println(e22);
 
-        e22.creerCours();
 
+        boolean created = false;
+        while (!created) {
+            created = e22.creerCours();
+            System.out.println("CREER COURS : " + created);
+        }
+
+        System.out.println(e22);
 
 
     }

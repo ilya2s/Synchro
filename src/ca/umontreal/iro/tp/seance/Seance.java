@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.util.Locale;
-import java.util.Objects;
 
 public class Seance {
 
@@ -53,7 +52,7 @@ public class Seance {
 
         return (seance.debut.isAfter(this.debut) && seance.debut.isBefore(this.fin))
                 || (this.debut.isAfter(seance.debut) && this.debut.isBefore(seance.fin))
-                || (seance.debut.equals(this.debut) && seance.fin.equals(this.fin));
+                || (seance.debut.equals(this.debut) || seance.fin.equals(this.fin));
     }
 
     @Override

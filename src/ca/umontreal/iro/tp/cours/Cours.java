@@ -23,13 +23,9 @@ public class Cours {
     private LocalDate dateFin;
     private final List<Seance> seances;
 
-    public Cours(String matiere, int numero, int credits, LocalDate dateDebut, LocalDate dateFin) throws Exception {
+    public Cours(String matiere, int numero, int credits, LocalDate dateDebut, LocalDate dateFin) {
         this.matiere = matiere;
-
-        if (numero / 1000 == 0) throw new NumberFormatException();
         this.numero = numero;
-
-
         this. credits = credits;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
@@ -174,12 +170,12 @@ public class Cours {
     }
 
     private String stringifyCours() {
-        if (seances.isEmpty()) return "";
+        if (seances.isEmpty()) return "\n";
 
         StringBuilder output = new StringBuilder();
 
+        output.append(" [");
         Seance seen = seances.get(0);
-        output.append(seances.get(0)).append("; ");
 
         for (Seance seance: seances) {
             if (!(seance instanceof SeanceExamen) &&
@@ -202,10 +198,11 @@ public class Cours {
     }
 
     private String stringifyExamens() {
-        if (seances.isEmpty()) return "";
+        if (seances.isEmpty()) return "\n";
 
         StringBuilder output = new StringBuilder();
 
+        output.append(" [");
         for (Seance seance: seances) {
             if (seance instanceof SeanceExamen) {
                 output
@@ -223,15 +220,17 @@ public class Cours {
 
     @Override
     public String toString() {
-        return matiere.toUpperCase() +
+        return "----------------------------------------------------------\n" +
+                matiere.toUpperCase() +
                 "-" +
                 numero +
                 " (" +
                 credits +
                 " crédits):\n" +
-                "Cours -> [" +
+                "Cours ->" +
                 stringifyCours() +
-                "Examens -> [" +
-                stringifyExamens();
+                "Examens ->" +
+                stringifyExamens() +
+                "\n----------------------------------------------------------";
     }
 }
