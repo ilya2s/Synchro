@@ -45,6 +45,8 @@ public class Horaire {
         DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");
 
         try {
+            if (coursDisponibles.size() == 3) throw new Exception("Vous avez atteint la limite de cours");
+
             System.out.print("MATIERE : ");
             String matiere = scanner.nextLine().toUpperCase();
             if (isNumeric(matiere)) throw new Exception("La matiere ne peut pas etre un numero!");
@@ -102,9 +104,42 @@ public class Horaire {
             return false;
         }
 
+
+
+        return coursDisponibles.add(cours);
+    }
+
+    public boolean supprimerCours() {
+        return false;
+    }
+
+    public boolean modifierCours() {
+        Scanner scanner = new Scanner(System.in);
+
+        Cours cours;
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");
+
+        try {
+            System.out.print("MATIERE : ");
+            String matiere = scanner.nextLine();
+            if (isNumeric(matiere)) throw new Exception("La matiere ne peut pas etre un numero!");
+
+            System.out.print("NUMERO : ");
+            int numero = Integer.parseInt(scanner.nextLine());
+
+            // Cherche si le cours existe dans coursDisponibles
+            cours = fetchCoursDisponible(matiere, numero);
+
+            if (cours == null) return false;    // si cours n'existe pas
+        } catch (Exception e) {
+            System.out.println(e.getMessage() + " Veuillez recommencer.");
+        }
+
+
+
         int choix = Integer.MIN_VALUE;
         while (choix != 0) {
-
             try {
                 System.out.println("Veuillez choisir une option :");
                 System.out.println("(1) Ajouter seances");
@@ -412,7 +447,7 @@ public class Horaire {
             }
         }
 
-        return coursDisponibles.add(cours);
+        return false;
     }
 
     public boolean inscrireCours() {
@@ -538,7 +573,8 @@ public class Horaire {
                 stringifyCoursDisponibles() +
                 "\n========================================\n" +
                 "Cours inscrits :\n" +
-                stringifyCoursInscrits();
+                stringifyCoursInscrits() +
+                "========================================";
 
     }
 

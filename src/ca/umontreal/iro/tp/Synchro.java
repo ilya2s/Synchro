@@ -1,3 +1,5 @@
+package ca.umontreal.iro.tp;
+
 import ca.umontreal.iro.tp.horaire.Horaire;
 
 import java.util.Scanner;
@@ -17,13 +19,15 @@ public class Synchro {
             try {
                 System.out.println("Veuillez choisir une option :");
                 System.out.println("(1) Creer un cours");
-                System.out.println("(2) Inscrire cours");
-                System.out.println("(3) Desinscire cours");
+                System.out.println("(2) Supprimer un cours");
+                System.out.println("(3) Modifier un cours");
+                System.out.println("(4) Inscrire cours a l'horaire");
+                System.out.println("(5) Desinscire cours de l'horaire");
                 System.out.println("(0) Quitter");
 
                 choix = Integer.parseInt(scanner.nextLine());
 
-                if (choix < 0 || choix > 3) {
+                if (choix < 0 || choix > 5) {
                     throw new Exception();
                 }
 
