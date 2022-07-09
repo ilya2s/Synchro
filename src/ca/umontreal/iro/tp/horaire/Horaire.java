@@ -460,13 +460,22 @@ public class Horaire {
         return coursInscrits.add(cours);
     }
 
+    public boolean desinscrireCours(String matiere, int numero) {
+        Cours cours = fetchCoursInscrit(matiere, numero);
+
+        if (cours == null) return false;
+
+        credits -= cours.getCredits();
+
+        return coursInscrits.removeIf(c -> c.equals(cours));
+    }
+
     private Cours fetchCoursDisponible(String matiere, int numero) {
         for (Cours c : coursDisponibles) {
             if (c.getMatiere().equalsIgnoreCase(matiere) && c.getNumero() == numero) {
                 return c;
             }
         }
-
         return null;
     }
 
@@ -477,16 +486,6 @@ public class Horaire {
             }
         }
         return null;
-    }
-
-    public boolean desinscrireCours(String matiere, int numero) {
-        Cours cours = fetchCoursInscrit(matiere, numero);
-
-        if (cours == null) return false;
-
-        credits -= cours.getCredits();
-
-        return coursInscrits.removeIf(c -> c.equals(cours));
     }
 
     private String stringifyCoursDisponibles() {

@@ -27,24 +27,8 @@ public class Seance {
         return jour;
     }
 
-    public void setJour(LocalDate jour) {
-        this.jour = jour;
-    }
-
     public LocalTime getDebut() {
         return debut;
-    }
-
-    public void setDebut(LocalTime debut) {
-        this.debut = debut;
-    }
-
-    public LocalTime getFin() {
-        return fin;
-    }
-
-    public void setFin(LocalTime fin) {
-        this.fin = fin;
     }
 
     public boolean isConflict(Seance seance) {
