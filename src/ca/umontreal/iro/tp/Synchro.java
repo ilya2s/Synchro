@@ -1,3 +1,5 @@
+package ca.umontreal.iro.tp;
+
 import ca.umontreal.iro.tp.horaire.Horaire;
 
 import java.util.Scanner;
