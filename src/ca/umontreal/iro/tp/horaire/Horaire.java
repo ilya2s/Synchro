@@ -1,6 +1,7 @@
 package ca.umontreal.iro.tp.horaire;
 
 import ca.umontreal.iro.tp.cours.Cours;
+import ca.umontreal.iro.tp.seance.Seance;
 import ca.umontreal.iro.tp.seance.Type;
 
 import java.time.DateTimeException;
@@ -27,29 +28,15 @@ public class Horaire {
         coursInscrits = new ArrayList<>();
     }
 
-    private boolean isNumeric(String s) {
-        try {
-            Integer.parseInt(s);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    public boolean creerCours() {
+    public boolean creerCours(String matiere, int numero) {
         Scanner scanner = new Scanner(System.in);
 
-        Cours cours = null;
+        Cours cours;
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");
 
         try {
-            System.out.print("MATIERE : ");
-            String matiere = scanner.nextLine();
-            if (isNumeric(matiere)) throw new Exception("La matiere ne peut pas etre un numero!");
-
-            System.out.print("NUMERO : ");
-            int numero = Integer.parseInt(scanner.nextLine());
+            if (coursDisponibles.size() == 3) throw new Exception("Vous avez atteint la limite de cours");
 
             for (Cours c : coursDisponibles) {
                 if (c.getMatiere().equals(matiere) && c.getNumero() == numero) {
@@ -82,7 +69,7 @@ public class Horaire {
                 throw new DateTimeException("L'heure de fin doit etre apres l'heure de debut!");
             }
 
-            if(cours.ajouterFinal(debut, fin)) {
+            if (cours.ajouterFinal(debut, fin)) {
                 System.out.println("Examen final ajouté avec succes.");
             } else {
                 System.out.println("Echec dans l'ajout de l'examen final.");
@@ -101,9 +88,34 @@ public class Horaire {
             return false;
         }
 
+        coursDisponibles.add(cours);
+        modifierCours(matiere, numero);
+
+        return true;
+    }
+
+    public boolean supprimerCours(String matiere, int numero) {
+        if (coursDisponibles.removeIf(c -> c.getMatiere().equals(matiere) && c.getNumero() == numero)) {
+            desinscrireCours(matiere, numero);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean modifierCours(String matiere, int numero) {
+        Scanner scanner = new Scanner(System.in);
+
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");
+
+        Cours cours = fetchCoursDisponible(matiere, numero);
+
+        if (cours == null) return false;    // si cours n'existe pas
+
         int choix = Integer.MIN_VALUE;
         while (choix != 0) {
-
             try {
                 System.out.println("Veuillez choisir une option :");
                 System.out.println("(1) Ajouter seances");
@@ -125,7 +137,7 @@ public class Horaire {
             }
 
             switch (choix) {
-                case 1:
+                case 1 -> {
                     try {
                         System.out.print("(T)héorie ou (P)ratique ?");
                         String type = scanner.nextLine();
@@ -156,7 +168,7 @@ public class Horaire {
                             throw new DateTimeException("L'heure de fin doit etre apres l'heure de debut!");
                         }
 
-                        if(cours.ajouterSeances(typeSeance, jourSeance, debut, fin)) {
+                        if (cours.ajouterSeances(typeSeance, jourSeance, debut, fin)) {
                             System.out.println("Seance ajoutée avec succes.");
                         } else {
                             System.out.println("Echec dans l'ajout de la seance.");
@@ -174,9 +186,8 @@ public class Horaire {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
                     System.out.println("----------------------------------------------------------");
-                    break;
-
-                case 2:
+                }
+                case 2 -> {
                     try {
                         System.out.print("(T)héorie ou (P)ratique ?");
                         String type = scanner.nextLine();
@@ -200,7 +211,7 @@ public class Horaire {
                         System.out.print("Heure de début de la seance: ");
                         LocalTime debut = LocalTime.parse(scanner.nextLine(), tf);
 
-                        if(cours.supprimerSeances(typeSeance, jourSeance, debut)) {
+                        if (cours.supprimerSeances(typeSeance, jourSeance, debut)) {
                             System.out.println("Seance supprimee avec succes.");
                         } else {
                             System.out.println("Echec dans la suppression de seance.");
@@ -216,9 +227,8 @@ public class Horaire {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
                     System.out.println("----------------------------------------------------------");
-                    break;
-
-                case 3:
+                }
+                case 3 -> {
                     try {
                         System.out.print("(T)héorie ou (P)ratique ?");
                         String type = scanner.nextLine();
@@ -283,15 +293,18 @@ public class Horaire {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
                     System.out.println("----------------------------------------------------------");
-                    break;
-
-                case 4:
+                }
+                case 4 -> {
                     try {
                         System.out.print("Date de l'examen intra (AAAA-MM-JJ) : ");
                         LocalDate dateIntra = LocalDate.parse(scanner.nextLine(), df);
 
                         if (dateIntra.isAfter(cours.getDateFin())) {
                             throw new DateTimeException("La date de l'intra ne peu pas etre apres la date de fin!");
+                        }
+
+                        if (dateIntra.isBefore(cours.getDateDebut())) {
+                            throw new DateTimeException("La date de l'intra ne peu pas etre avant la date de debut!");
                         }
 
                         System.out.print("Heure de début de l'examen intra : ");
@@ -304,7 +317,7 @@ public class Horaire {
                             throw new DateTimeException("L'heure de fin doit etre apres l'heure de debut!");
                         }
 
-                        if(cours.ajouterIntra(dateIntra, debut, fin)) {
+                        if (cours.ajouterIntra(dateIntra, debut, fin)) {
                             System.out.println("Intra ajouté avec succes.");
                         } else {
                             System.out.println("Echec dans l'ajout de l'examen Intra.");
@@ -322,9 +335,8 @@ public class Horaire {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
                     System.out.println("----------------------------------------------------------");
-                    break;
-
-                case 5:
+                }
+                case 5 -> {
                     try {
                         System.out.print("Date de l'examen intra à supprimer : ");
                         LocalDate dateIntra = LocalDate.parse(scanner.nextLine(), df);
@@ -332,7 +344,7 @@ public class Horaire {
                         System.out.print("Heure de début de l'examen intra a supprimer : ");
                         LocalTime debut = LocalTime.parse(scanner.nextLine(), tf);
 
-                        if(cours.supprimerIntra(dateIntra, debut)) {
+                        if (cours.supprimerIntra(dateIntra, debut)) {
                             System.out.println("Intra supprimee avec succes.");
                         } else {
                             System.out.println("Echec dans la suppression de l'examen intra.");
@@ -348,9 +360,8 @@ public class Horaire {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
                     System.out.println("----------------------------------------------------------");
-                    break;
-
-                case 6:
+                }
+                case 6 -> {
                     try {
                         System.out.print("Date de l'examen intra à modifier : ");
                         LocalDate dateIntra = LocalDate.parse(scanner.nextLine(), df);
@@ -385,9 +396,8 @@ public class Horaire {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
                     System.out.println("----------------------------------------------------------");
-                    break;
-
-                case 7:
+                }
+                case 7 -> {
                     try {
                         System.out.print("Nouvelle heure de début de l'examen final : ");
                         LocalTime autreDebut = LocalTime.parse(scanner.nextLine(), tf);
@@ -413,27 +423,85 @@ public class Horaire {
                         System.out.println("Choix invalid! Veuillez recommencer.");
                     }
                     System.out.println("----------------------------------------------------------");
-                    break;
+                }
             }
         }
 
-        return coursDisponibles.add(cours);
+        return false;
     }
 
     public boolean inscrireCours(String matiere, int numero) {
-
         // Cherche si le cours existe dans coursDisponibles
+        Cours cours = fetchCoursDisponible(matiere, numero);
+
+        if (cours == null) return false;    // si cours n'existe pas
+
+        if (credits + cours.getCredits() > creditsMax) {
+            System.out.println("Impossible d'inscire le cours! Vous n'avez le droit qu'à " + creditsMax + " credits.");
+            return false;
+        }
 
         // verifier qu'il n y pas de conflit avec les autres coursInscrits
+        for (Seance s : cours.getSeances()) {
+            for (Cours c : coursDisponibles) {
+                if (!c.equals(cours)) {
+                    for (Seance seance : c.getSeances()) {
+                        if (s.isConflict(seance)) {
+                            System.out.println("Impossible d'inscire le cours! Il y a conflit d'horaire.");
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
 
         // ajouter cours dans coursInscrits à partir de coursDisponibles
-        return true;
+        credits += cours.getCredits();
+        return coursInscrits.add(cours);
+    }
+
+    public boolean desinscrireCours(String matiere, int numero) {
+        Cours cours = fetchCoursInscrit(matiere, numero);
+
+        if (cours == null) return false;
+
+        credits -= cours.getCredits();
+
+        return coursInscrits.removeIf(c -> c.equals(cours));
+    }
+
+    private Cours fetchCoursDisponible(String matiere, int numero) {
+        for (Cours c : coursDisponibles) {
+            if (c.getMatiere().equalsIgnoreCase(matiere) && c.getNumero() == numero) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    private Cours fetchCoursInscrit(String matiere, int numero) {
+        for (Cours c : coursInscrits) {
+            if (c.getMatiere().equalsIgnoreCase(matiere) && c.getNumero() == numero) {
+                return c;
+            }
+        }
+        return null;
     }
 
     private String stringifyCoursDisponibles() {
         StringBuilder output = new StringBuilder();
 
         for (Cours c : coursDisponibles) {
+            output.append(c);
+        }
+
+        return output.toString();
+    }
+
+    private String stringifyCoursInscrits() {
+        StringBuilder output = new StringBuilder();
+
+        for (Cours c : coursInscrits) {
             output.append(c);
         }
 
@@ -448,8 +516,11 @@ public class Horaire {
                 (creditsMax - credits) + " credits restants)\n" +
                 "========================================\n" +
                 "Cours disponibles :\n" +
-                "----------------------------------------------------------\n" +
-                stringifyCoursDisponibles();
+                stringifyCoursDisponibles() +
+                "\n========================================\n" +
+                "Cours inscrits :\n" +
+                stringifyCoursInscrits() +
+                "========================================";
 
     }
 

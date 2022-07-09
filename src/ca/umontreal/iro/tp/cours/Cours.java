@@ -140,16 +140,6 @@ public class Cours {
         return Collections.unmodifiableList(seances);
     }
 
-    public List<Seance> getSeances(Type type) {
-        List<Seance> seances = new ArrayList<>();
-        for (Seance seance : this.seances) {
-            if (seance.getType().equals(type)) {
-                seances.add(seance);
-            }
-        }
-        return seances.isEmpty() ? null : seances;
-    }
-
     private String stringifyCours() {
         if (seances.isEmpty()) return "\n";
 
@@ -201,7 +191,8 @@ public class Cours {
 
     @Override
     public String toString() {
-        return matiere.toUpperCase() +
+        return "----------------------------------------------------------\n" +
+                matiere.toUpperCase() +
                 "-" +
                 numero +
                 " (" +

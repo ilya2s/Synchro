@@ -2,6 +2,8 @@ package ca.umontreal.iro.tp;
 
 import ca.umontreal.iro.tp.horaire.Horaire;
 
+import java.util.Scanner;
+
 public class Tests {
 
     public static void main(String[] args) {
@@ -127,21 +129,5 @@ public class Tests {
 
         System.out.println("========================================================");
         */
-
-
-        Horaire e22 = new Horaire(18);
-        System.out.println(e22);
-
-
-        while (true) {
-            boolean created = false;
-            while (!created) {
-                created = e22.creerCours();
-                System.out.println("CREER COURS : " + created);
-            }
-            System.out.println(e22);
-        }
-
-
     }
 }
