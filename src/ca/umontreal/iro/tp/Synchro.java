@@ -50,6 +50,7 @@ public class Synchro {
                         int numero = Integer.parseInt(scanner.nextLine());
 
                         boolean created = e22.creerCours(matiere, numero);
+
                         if (created) {
                             System.out.println("Cours ajouté aux cours disponibles.");
                         } else {
@@ -104,6 +105,7 @@ public class Synchro {
                         int numero = Integer.parseInt(scanner.nextLine());
 
                         boolean inscrit = e22.inscrireCours(matiere, numero);
+                        
                         if (inscrit) {
                             System.out.println("Cours inscrit.");
                         } else {
@@ -111,6 +113,7 @@ public class Synchro {
                         }
                         System.out.println(e22);
                     }
+                    
                     case 5 -> {
                         System.out.print("MATIERE : ");
                         String matiere = scanner.nextLine().toUpperCase();
@@ -120,6 +123,7 @@ public class Synchro {
                         int numero = Integer.parseInt(scanner.nextLine());
 
                         boolean desinscrit = e22.desinscrireCours(matiere, numero);
+                        
                         if (desinscrit) {
                             System.out.println("Cours desinscrit.");
                         } else {
