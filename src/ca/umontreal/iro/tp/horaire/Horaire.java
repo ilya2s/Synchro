@@ -120,6 +120,9 @@ public class Horaire {
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");
 
+        String matiere = "";
+        int numero = 0;
+
         try {
             System.out.print("MATIERE : ");
             String matiere = scanner.nextLine();
@@ -128,15 +131,13 @@ public class Horaire {
             System.out.print("NUMERO : ");
             int numero = Integer.parseInt(scanner.nextLine());
 
-            // Cherche si le cours existe dans coursDisponibles
-            cours = fetchCoursDisponible(matiere, numero);
-
             if (cours == null) return false;    // si cours n'existe pas
         } catch (Exception e) {
             System.out.println(e.getMessage() + " Veuillez recommencer.");
         }
 
-
+        // Cherche si le cours existe dans coursDisponibles
+        cours = fetchCoursDisponible(matiere, numero);
 
         int choix = Integer.MIN_VALUE;
         while (choix != 0) {
