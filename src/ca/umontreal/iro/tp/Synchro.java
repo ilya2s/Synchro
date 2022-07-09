@@ -6,6 +6,15 @@ import java.util.Scanner;
 
 public class Synchro {
 
+    private static boolean isNumeric(String s) {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
@@ -28,12 +37,19 @@ public class Synchro {
                 choix = Integer.parseInt(scanner.nextLine());
 
                 if (choix < 0 || choix > 5) {
-                    throw new Exception();
+                    throw new Exception("Choix invalid!");
                 }
 
                 switch (choix) {
                     case 1 -> {
-                        boolean created = e22.creerCours();
+                        System.out.print("MATIERE : ");
+                        String matiere = scanner.nextLine().toUpperCase();
+                        if (isNumeric(matiere)) throw new Exception("La matiere ne peut pas etre un numero!");
+
+                        System.out.print("NUMERO : ");
+                        int numero = Integer.parseInt(scanner.nextLine());
+
+                        boolean created = e22.creerCours(matiere, numero);
                         if (created) {
                             System.out.println("Cours ajouté aux cours disponibles.");
                         } else {
@@ -41,8 +57,53 @@ public class Synchro {
                         }
                         System.out.println(e22);
                     }
+
                     case 2 -> {
-                        boolean inscrit = e22.inscrireCours();
+
+                        System.out.print("MATIERE : ");
+                        String matiere = scanner.nextLine().toUpperCase();
+                        if (isNumeric(matiere)) throw new Exception("La matiere ne peut pas etre un numero!");
+
+                        System.out.print("NUMERO : ");
+                        int numero = Integer.parseInt(scanner.nextLine());
+
+                        boolean inscrit = e22.supprimerCours(matiere, numero);
+                        if (inscrit) {
+                            System.out.println("Cours supprimé.");
+                        } else {
+                            System.out.println("Le cours n'a pas pu etre supprimé.");
+                        }
+                        System.out.println(e22);
+
+                    }
+
+                    case 3 -> {
+                        System.out.print("MATIERE : ");
+                        String matiere = scanner.nextLine().toUpperCase();
+                        if (isNumeric(matiere)) throw new Exception("La matiere ne peut pas etre un numero!");
+
+                        System.out.print("NUMERO : ");
+                        int numero = Integer.parseInt(scanner.nextLine());
+
+                        boolean inscrit = e22.modifierCours(matiere, numero);
+                        if (inscrit) {
+                            System.out.println("Cours modifié.");
+                        } else {
+                            System.out.println("Le cours n'a pas pu etre modifié.");
+                        }
+                        System.out.println(e22);
+
+                    }
+
+                    case 4 -> {
+                        System.out.print("MATIERE : ");
+                        String matiere = scanner.nextLine().toUpperCase();
+                        if (isNumeric(matiere)) throw new Exception("La matiere ne peut pas etre un numero!");
+
+                        System.out.print("NUMERO : ");
+                        int numero = Integer.parseInt(scanner.nextLine());
+
+                        boolean inscrit = e22.inscrireCours(matiere, numero);
                         if (inscrit) {
                             System.out.println("Cours inscrit.");
                         } else {
@@ -50,17 +111,25 @@ public class Synchro {
                         }
                         System.out.println(e22);
                     }
-                    case 3 -> {
-                        boolean desinscrit = e22.desinscrireCours();
+                    case 5 -> {
+                        System.out.print("MATIERE : ");
+                        String matiere = scanner.nextLine().toUpperCase();
+                        if (isNumeric(matiere)) throw new Exception("La matiere ne peut pas etre un numero!");
+
+                        System.out.print("NUMERO : ");
+                        int numero = Integer.parseInt(scanner.nextLine());
+
+                        boolean desinscrit = e22.desinscrireCours(matiere, numero);
                         if (desinscrit) {
                             System.out.println("Cours desinscrit.");
                         } else {
                             System.out.println("Le cours n'a pas pu etre desinscrit.");
                         }
+                        System.out.println(e22);
                     }
                 }
             } catch (Exception e) {
-                System.out.println("Choix invalid! Veuillez recommencer.");
+                System.out.println(e.getMessage() + " Veuillez recommencer.");
             }
         }
     }

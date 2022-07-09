@@ -28,16 +28,7 @@ public class Horaire {
         coursInscrits = new ArrayList<>();
     }
 
-    private boolean isNumeric(String s) {
-        try {
-            Integer.parseInt(s);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    public boolean creerCours() {
+    public boolean creerCours(String matiere, int numero) {
         Scanner scanner = new Scanner(System.in);
 
         Cours cours;
@@ -46,13 +37,6 @@ public class Horaire {
 
         try {
             if (coursDisponibles.size() == 3) throw new Exception("Vous avez atteint la limite de cours");
-
-            System.out.print("MATIERE : ");
-            String matiere = scanner.nextLine().toUpperCase();
-            if (isNumeric(matiere)) throw new Exception("La matiere ne peut pas etre un numero!");
-
-            System.out.print("NUMERO : ");
-            int numero = Integer.parseInt(scanner.nextLine());
 
             for (Cours c : coursDisponibles) {
                 if (c.getMatiere().equals(matiere) && c.getNumero() == numero) {
@@ -104,40 +88,31 @@ public class Horaire {
             return false;
         }
 
+        coursDisponibles.add(cours);
+        modifierCours(matiere, numero);
 
-
-        return coursDisponibles.add(cours);
+        return true;
     }
 
-    public boolean supprimerCours() {
+    public boolean supprimerCours(String matiere, int numero) {
+        if (coursDisponibles.removeIf(c -> c.getMatiere().equals(matiere) && c.getNumero() == numero)) {
+            desinscrireCours(matiere, numero);
+
+            return true;
+        }
+
         return false;
     }
 
-    public boolean modifierCours() {
+    public boolean modifierCours(String matiere, int numero) {
         Scanner scanner = new Scanner(System.in);
 
-        Cours cours;
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");
 
-        String matiere = "";
-        int numero = 0;
+        Cours cours = fetchCoursDisponible(matiere, numero);
 
-        try {
-            System.out.print("MATIERE : ");
-            String matiere = scanner.nextLine();
-            if (isNumeric(matiere)) throw new Exception("La matiere ne peut pas etre un numero!");
-
-            System.out.print("NUMERO : ");
-            int numero = Integer.parseInt(scanner.nextLine());
-
-            if (cours == null) return false;    // si cours n'existe pas
-        } catch (Exception e) {
-            System.out.println(e.getMessage() + " Veuillez recommencer.");
-        }
-
-        // Cherche si le cours existe dans coursDisponibles
-        cours = fetchCoursDisponible(matiere, numero);
+        if (cours == null) return false;    // si cours n'existe pas
 
         int choix = Integer.MIN_VALUE;
         while (choix != 0) {
@@ -451,50 +426,34 @@ public class Horaire {
         return false;
     }
 
-    public boolean inscrireCours() {
-        Scanner scanner = new Scanner(System.in);
+    public boolean inscrireCours(String matiere, int numero) {
+        // Cherche si le cours existe dans coursDisponibles
+        Cours cours = fetchCoursDisponible(matiere, numero);
 
-        try {
-            System.out.print("MATIERE : ");
-            String matiere = scanner.nextLine();
-            if (isNumeric(matiere)) throw new Exception("La matiere ne peut pas etre un numero!");
+        if (cours == null) return false;    // si cours n'existe pas
 
-            System.out.print("NUMERO : ");
-            int numero = Integer.parseInt(scanner.nextLine());
+        if (credits + cours.getCredits() > creditsMax) {
+            System.out.println("Impossible d'inscire le cours! Vous n'avez le droit qu'à " + creditsMax + " credits.");
+            return false;
+        }
 
-            // Cherche si le cours existe dans coursDisponibles
-            Cours cours = fetchCoursDisponible(matiere, numero);
-
-            if (cours == null) return false;    // si cours n'existe pas
-
-            if (credits + cours.getCredits() > creditsMax) {
-                System.out.println("Impossible d'inscire le cours! Vous n'avez le droit qu'à " + creditsMax + " credits.");
-                return false;
-            }
-
-            // verifier qu'il n y pas de conflit avec les autres coursInscrits
-            for (Seance s : cours.getSeances()) {
-                for (Cours c : coursDisponibles) {
-                    if (!c.equals(cours)) {
-                        for (Seance seance : c.getSeances()) {
-                            if (s.isConflict(seance)) {
-                                System.out.println("Impossible d'inscire le cours! Il y a conflit d'horaire.");
-                                return false;
-                            }
+        // verifier qu'il n y pas de conflit avec les autres coursInscrits
+        for (Seance s : cours.getSeances()) {
+            for (Cours c : coursDisponibles) {
+                if (!c.equals(cours)) {
+                    for (Seance seance : c.getSeances()) {
+                        if (s.isConflict(seance)) {
+                            System.out.println("Impossible d'inscire le cours! Il y a conflit d'horaire.");
+                            return false;
                         }
                     }
                 }
             }
-
-            // ajouter cours dans coursInscrits à partir de coursDisponibles
-            credits += cours.getCredits();
-            return coursInscrits.add(cours);
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage() + " Veuillez recommencer.");
         }
 
-        return false;
+        // ajouter cours dans coursInscrits à partir de coursDisponibles
+        credits += cours.getCredits();
+        return coursInscrits.add(cours);
     }
 
     private Cours fetchCoursDisponible(String matiere, int numero) {
@@ -513,34 +472,17 @@ public class Horaire {
                 return c;
             }
         }
-
         return null;
     }
 
-    public boolean desinscrireCours() {
-        Scanner scanner = new Scanner(System.in);
+    public boolean desinscrireCours(String matiere, int numero) {
+        Cours cours = fetchCoursInscrit(matiere, numero);
 
-        try {
-            System.out.print("MATIERE : ");
-            String matiere = scanner.nextLine();
-            if (isNumeric(matiere)) throw new Exception("La matiere ne peut pas etre un numero!");
+        if (cours == null) return false;
 
-            System.out.print("NUMERO : ");
-            int numero = Integer.parseInt(scanner.nextLine());
+        credits -= cours.getCredits();
 
-            Cours cours = fetchCoursInscrit(matiere, numero);
-
-            if (cours == null) return false;
-
-            credits -= cours.getCredits();
-
-            return coursInscrits.removeIf(c -> c.equals(cours));
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage() + " Veuillez recommencer.");
-        }
-
-        return false;
+        return coursInscrits.removeIf(c -> c.equals(cours));
     }
 
     private String stringifyCoursDisponibles() {
