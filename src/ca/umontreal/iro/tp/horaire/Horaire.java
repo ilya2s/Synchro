@@ -303,6 +303,10 @@ public class Horaire {
                             throw new DateTimeException("La date de l'intra ne peu pas etre apres la date de fin!");
                         }
 
+                        if (dateIntra.isBefore(cours.getDateDebut())) {
+                            throw new DateTimeException("La date de l'intra ne peu pas etre avant la date de debut!");
+                        }
+
                         System.out.print("Heure de début de l'examen intra : ");
                         LocalTime debut = LocalTime.parse(scanner.nextLine(), tf);
 
