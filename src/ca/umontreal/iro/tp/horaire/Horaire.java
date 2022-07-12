@@ -15,12 +15,19 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * La classe Horaire représente un horaire d'étudiant contenant des cours disponibles et des cours inscrits
+ */
 public class Horaire {
-    private final int creditsMax;
-    private int credits;
-    private final List<Cours> coursDisponibles;
-    private final List<Cours> coursInscrits;
+    private final int creditsMax;   // nombre maximal de crédits pour cet horaire
+    private int credits;    // les crédits inscrits à cet horaire
+    private final List<Cours> coursDisponibles;     // Liste des cours disponibles pour l'inscription
+    private final List<Cours> coursInscrits;    // Liste des cours inscrits
 
+    /**
+     * Constructeur d'un objet Horaire
+     * @param creditsMax Nombre maximum de crédits pour l'horaire
+     */
     public Horaire(int creditsMax) {
         this.creditsMax = creditsMax;
         credits = 0;
@@ -28,21 +35,30 @@ public class Horaire {
         coursInscrits = new ArrayList<>();
     }
 
+    /**
+     * Creer un cours et l'ajouter à l'horaire
+     * @param matiere La matire du cours (ex.: IFT)
+     * @param numero Le numero du cours (ex.: 1025)
+     * @return vrai si le cours est créee et ajouté avec succès
+     */
     public boolean creerCours(String matiere, int numero) {
         Scanner scanner = new Scanner(System.in);
 
         Cours cours;
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");   // format de la date
+        DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");        // format de l'heure
 
         try {
-            if (coursDisponibles.size() == 3) throw new Exception("Vous avez atteint la limite de cours");
+            // Limiter à 10 cours au plus
+            if (coursDisponibles.size() == 10) throw new Exception("Vous avez atteint la limite de cours");
 
+            // Si cours est deja crée
             for (Cours c : coursDisponibles) {
                 if (c.getMatiere().equals(matiere) && c.getNumero() == numero) {
                     throw new Exception("Ce cours existe deja!");
                 }
             }
+
 
             System.out.print("CREDITS : ");
             int credits = Integer.parseInt(scanner.nextLine());
@@ -57,6 +73,7 @@ public class Horaire {
                 throw new DateTimeException("La date de fin dois etre apres la date de debut!");
             }
 
+            // instancier le cours
             cours = new Cours(matiere, numero, credits, dateDebut, dateFin);
 
             System.out.print("HEURE DEBUT DE L'EXAMEN FINAL : ");
@@ -69,6 +86,7 @@ public class Horaire {
                 throw new DateTimeException("L'heure de fin doit etre apres l'heure de debut!");
             }
 
+            // Ajouter l'examen final au cours avec l'heure de début et l'heure de fin
             if (cours.ajouterFinal(debut, fin)) {
                 System.out.println("Examen final ajouté avec succes.");
             } else {
@@ -88,35 +106,53 @@ public class Horaire {
             return false;
         }
 
-        coursDisponibles.add(cours);
-        modifierCours(matiere, numero);
+        coursDisponibles.add(cours);        // ajouter le cours à la liste de cours disponibles
+        modifierCours(matiere, numero);     // lancer le menu de modification du cours
 
         return true;
     }
 
+    /**
+     * Supprimer un cours de la liste des cours disponibles <br><br>
+     * Cette méthode aussi retire le cours de la liste des cours inscrits.
+     * @param matiere Matière du cours à supprimer
+     * @param numero Numéro du cours à supprimer
+     * @return vrai si le cours est supprimé avec succès, sinon faux
+     */
     public boolean supprimerCours(String matiere, int numero) {
+        // retirer si un cours contient meme matière et meme numero
         if (coursDisponibles.removeIf(c -> c.getMatiere().equals(matiere) && c.getNumero() == numero)) {
-            desinscrireCours(matiere, numero);
+            desinscrireCours(matiere, numero);  // aussi désinscrire des cours inscrits
 
             return true;
         }
-
         return false;
     }
 
+    /**
+     * Modifier les informations d'un cours disponible.
+     * @param matiere Matière du cours à modifier
+     * @param numero Numero du cours à modifier
+     * @return vrai si le cours est modifié avec succès, sinon faux
+     */
     public boolean modifierCours(String matiere, int numero) {
         Scanner scanner = new Scanner(System.in);
 
+        // format de la date et de l'heure
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");
 
-        Cours cours = fetchCoursDisponible(matiere, numero);
+        Cours cours = fetchCoursDisponible(matiere, numero);    // chercher le cours à modifier
 
-        if (cours == null) return false;    // si cours n'existe pas
+        if (cours == null) return false;    // si cours n'existe pas quitter
+
+
 
         int choix = Integer.MIN_VALUE;
         while (choix != 0) {
             try {
+
+                // Les options du menu de modification de cours
                 System.out.println("Veuillez choisir une option :");
                 System.out.println("(1) Ajouter seances");
                 System.out.println("(2) Supprimer une seance");
@@ -129,7 +165,7 @@ public class Horaire {
 
                 choix = Integer.parseInt(scanner.nextLine());
 
-                if (choix < 0 || choix > 7) {
+                if (choix < 0 || choix > 7) {   // si choix n'est pas dans le range du menu
                     throw new Exception();
                 }
             } catch (Exception e) {
@@ -137,15 +173,18 @@ public class Horaire {
             }
 
             switch (choix) {
-                case 1 -> {
+                case 1 -> {     // ajouter seances
                     try {
+                        // lire type de seance
                         System.out.print("(T)héorie ou (P)ratique ?");
                         String type = scanner.nextLine();
+                        // valider le type de la seance
                         if (!type.equalsIgnoreCase("T") && !type.equalsIgnoreCase("P")) {
                             throw new InputMismatchException("Type de seance invalid!");
                         }
                         Type typeSeance = type.equalsIgnoreCase("T") ? Type.Theorie : Type.Pratique;
 
+                        // choix du jour de semaine
                         System.out.println("Veuillez choisir un jour de la semaine :");
                         System.out.println("(1) Lundi");
                         System.out.println("(2) Mardi");
@@ -153,6 +192,7 @@ public class Horaire {
                         System.out.println("(4) Jeudi");
                         System.out.println("(5) Vendredi");
                         int jour = Integer.parseInt(scanner.nextLine());
+                        // valider le choix
                         if (jour < 1 || jour > 5) {
                             throw new InputMismatchException("Jour de semaine invalid!");
                         }
@@ -168,6 +208,7 @@ public class Horaire {
                             throw new DateTimeException("L'heure de fin doit etre apres l'heure de debut!");
                         }
 
+                        // si la séance est ajoutée avec succès
                         if (cours.ajouterSeances(typeSeance, jourSeance, debut, fin)) {
                             System.out.println("Seance ajoutée avec succes.");
                         } else {
@@ -187,7 +228,8 @@ public class Horaire {
                     }
                     System.out.println("----------------------------------------------------------");
                 }
-                case 2 -> {
+
+                case 2 -> {     // supprimer seances
                     try {
                         System.out.print("(T)héorie ou (P)ratique ?");
                         String type = scanner.nextLine();
@@ -211,6 +253,7 @@ public class Horaire {
                         System.out.print("Heure de début de la seance: ");
                         LocalTime debut = LocalTime.parse(scanner.nextLine(), tf);
 
+                        // si la séance est supprimée avec succès
                         if (cours.supprimerSeances(typeSeance, jourSeance, debut)) {
                             System.out.println("Seance supprimee avec succes.");
                         } else {
@@ -228,7 +271,8 @@ public class Horaire {
                     }
                     System.out.println("----------------------------------------------------------");
                 }
-                case 3 -> {
+
+                case 3 -> {     // Modifier une seance
                     try {
                         System.out.print("(T)héorie ou (P)ratique ?");
                         String type = scanner.nextLine();
@@ -270,6 +314,7 @@ public class Horaire {
                         System.out.print("Nouvelle heure de fin de la seance: ");
                         LocalTime autreFin = LocalTime.parse(scanner.nextLine(), tf);
 
+                        // si la séance est modifiée avec succès
                         if (cours.modifierSeances(typeSeance,
                                 jourSeance,
                                 debut,
@@ -294,7 +339,8 @@ public class Horaire {
                     }
                     System.out.println("----------------------------------------------------------");
                 }
-                case 4 -> {
+
+                case 4 -> {     // ajouter examen intra
                     try {
                         System.out.print("Date de l'examen intra (AAAA-MM-JJ) : ");
                         LocalDate dateIntra = LocalDate.parse(scanner.nextLine(), df);
@@ -317,6 +363,7 @@ public class Horaire {
                             throw new DateTimeException("L'heure de fin doit etre apres l'heure de debut!");
                         }
 
+                        // si l'examen intra est ajouté avec succès
                         if (cours.ajouterIntra(dateIntra, debut, fin)) {
                             System.out.println("Intra ajouté avec succes.");
                         } else {
@@ -336,7 +383,7 @@ public class Horaire {
                     }
                     System.out.println("----------------------------------------------------------");
                 }
-                case 5 -> {
+                case 5 -> {     // supprimer examen intra
                     try {
                         System.out.print("Date de l'examen intra à supprimer : ");
                         LocalDate dateIntra = LocalDate.parse(scanner.nextLine(), df);
@@ -344,6 +391,7 @@ public class Horaire {
                         System.out.print("Heure de début de l'examen intra a supprimer : ");
                         LocalTime debut = LocalTime.parse(scanner.nextLine(), tf);
 
+                        // si l'examen est supprimé avec succès
                         if (cours.supprimerIntra(dateIntra, debut)) {
                             System.out.println("Intra supprimee avec succes.");
                         } else {
@@ -361,7 +409,7 @@ public class Horaire {
                     }
                     System.out.println("----------------------------------------------------------");
                 }
-                case 6 -> {
+                case 6 -> {     // modifier examen intra
                     try {
                         System.out.print("Date de l'examen intra à modifier : ");
                         LocalDate dateIntra = LocalDate.parse(scanner.nextLine(), df);
@@ -378,6 +426,7 @@ public class Horaire {
                         System.out.print("Nouvelle heure de fin de l'examen intra : ");
                         LocalTime autreFin = LocalTime.parse(scanner.nextLine(), tf);
 
+                        // si l'examen intra est modifié avec succès
                         if (cours.modifierIntra(dateIntra, debut, autreDate, autreDebut, autreFin)) {
                             System.out.println("Intra modifiee avec succes.");
                         } else {
@@ -397,7 +446,7 @@ public class Horaire {
                     }
                     System.out.println("----------------------------------------------------------");
                 }
-                case 7 -> {
+                case 7 -> {     // modifier examen final
                     try {
                         System.out.print("Nouvelle heure de début de l'examen final : ");
                         LocalTime autreDebut = LocalTime.parse(scanner.nextLine(), tf);
@@ -405,6 +454,7 @@ public class Horaire {
                         System.out.print("Nouvelle heure de fin de l'examen final : ");
                         LocalTime autreFin = LocalTime.parse(scanner.nextLine(), tf);
 
+                        // si l'examen final est modifié avec succès
                         if (cours.modifierFinal(autreDebut, autreFin)) {
                             System.out.println("Final modifiee avec succes.");
                         } else {
@@ -430,23 +480,33 @@ public class Horaire {
         return false;
     }
 
+    /**
+     * Inscire un cours disponible dans l'horaire
+     * @param matiere Matière du cours à inscrire
+     * @param numero Numéro du cours à inscrire
+     * @return vrai si le cours est inscrit avec succès
+     */
     public boolean inscrireCours(String matiere, int numero) {
         // Cherche si le cours existe dans coursDisponibles
         Cours cours = fetchCoursDisponible(matiere, numero);
 
         if (cours == null) return false;    // si cours n'existe pas
 
+        // si le nombre de crédits dépasse le max autorisé
         if (credits + cours.getCredits() > creditsMax) {
             System.out.println("Impossible d'inscire le cours! Vous n'avez le droit qu'à " + creditsMax + " credits.");
             return false;
         }
 
         // verifier qu'il n y pas de conflit avec les autres coursInscrits
-        for (Seance s : cours.getSeances()) {
-            for (Cours c : coursDisponibles) {
-                if (!c.equals(cours)) {
-                    for (Seance seance : c.getSeances()) {
-                        if (s.isConflict(seance)) {
+        for (Seance s : cours.getSeances()) {   // pour chaque séance du cours à ajouter
+
+            // explorer
+
+            for (Cours c : coursInscrits) {  // pour chaque cours inscrit
+                if (!c.equals(cours)) {     // si ce n'est pas le meme cours
+                    for (Seance seance : c.getSeances()) {  // pour chauqe séance
+                        if (s.isConflict(seance)) {     // valider si il y'a un conflit
                             System.out.println("Impossible d'inscire le cours! Il y a conflit d'horaire.");
                             return false;
                         }
@@ -460,16 +520,28 @@ public class Horaire {
         return coursInscrits.add(cours);
     }
 
+    /**
+     * Désinscrire un cours de l'horaire. Ne le retire pas de la liste de cours disponibles.
+     * @param matiere Matière du cours à désinscrire
+     * @param numero Numéro du cours à désinscire
+     * @return vrai si le cours est désinscrit avec succès
+     */
     public boolean desinscrireCours(String matiere, int numero) {
-        Cours cours = fetchCoursInscrit(matiere, numero);
+        Cours cours = fetchCoursInscrit(matiere, numero);   // trouver le cours dans la liste de cours inscrits
 
-        if (cours == null) return false;
+        if (cours == null) return false;    // si n'existe pas
 
-        credits -= cours.getCredits();
+        credits -= cours.getCredits();  // modifier les crédits
 
-        return coursInscrits.removeIf(c -> c.equals(cours));
+        return coursInscrits.removeIf(c -> c.equals(cours));    // retirer le cours de la liste des cours inscrits
     }
 
+    /**
+     * Trouver un cours ayant une matière et un numéro donné en paramètre dans la liste de cours disponibles
+     * @param matiere Matière du cours à trouver
+     * @param numero Numéro du cours à trouver
+     * @return Objet Cours trouvé si le cours existe, sinon null
+     */
     private Cours fetchCoursDisponible(String matiere, int numero) {
         for (Cours c : coursDisponibles) {
             if (c.getMatiere().equalsIgnoreCase(matiere) && c.getNumero() == numero) {
@@ -479,6 +551,12 @@ public class Horaire {
         return null;
     }
 
+    /**
+     * Trouver un cours ayant une matière et un numéro donné en paramètre dans la liste de cours inscrits
+     * @param matiere Matière du cours à trouver
+     * @param numero Numéro du cours à trouver
+     * @return Objet COurs trouvé si le cours existe, sinon null
+     */
     private Cours fetchCoursInscrit(String matiere, int numero) {
         for (Cours c : coursInscrits) {
             if (c.getMatiere().equalsIgnoreCase(matiere) && c.getNumero() == numero) {
@@ -488,6 +566,9 @@ public class Horaire {
         return null;
     }
 
+    /**
+     * @return Affichage formaté des cours disponibles
+     */
     private String stringifyCoursDisponibles() {
         StringBuilder output = new StringBuilder();
 
@@ -498,6 +579,9 @@ public class Horaire {
         return output.toString();
     }
 
+    /**
+     * @return Affichage formaté des cours inscrits
+     */
     private String stringifyCoursInscrits() {
         StringBuilder output = new StringBuilder();
 
@@ -508,6 +592,10 @@ public class Horaire {
         return output.toString();
     }
 
+    /**
+     * Affiche l'horaire d'un étudiant avec le nombdre de crédits inscrits, les cours disponibles et les cours inscrits
+     * @return Affichage formaté de l'horaire
+     */
     @Override
     public String toString() {
         return "========================================\n" +

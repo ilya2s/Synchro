@@ -4,8 +4,17 @@ import ca.umontreal.iro.tp.horaire.Horaire;
 
 import java.util.Scanner;
 
+/**
+ * Fonction main du programme, Ici on prend les inputs de l'utilisateur et on appelle les methodes appropriées de
+ * la Classe Horaire
+ */
 public class Synchro {
 
+    /**
+     * Permet de verifier si un String est un numéro ou non
+     * @param s Le String à valider
+     * @return vrai si le String est un numéro, sinon faux
+     */
     private static boolean isNumeric(String s) {
         try {
             Integer.parseInt(s);
@@ -19,6 +28,8 @@ public class Synchro {
 
         Scanner scanner = new Scanner(System.in);
 
+        // le nombre de crédits max par session est determiné par l'administration
+        // ni l'étudiant ni une TDGE ne peut le modifier donc il ne fait pas partie des inputs
         Horaire e22 = new Horaire(18);
         System.out.println(e22);
 
